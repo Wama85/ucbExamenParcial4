@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
 
         AndroidThreeTen.init(this)
 
-        val viewModel = AppModule.provideTimeViewModel()
+        val viewModel = AppModule.provideTimeViewModel(this)
 
         setContent {
             TimeScreen(viewModel)
