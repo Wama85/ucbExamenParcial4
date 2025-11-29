@@ -2,7 +2,6 @@ package com.example.ucbexamenes.features.time.data.repository
 
 import android.content.Context
 import com.example.ucbexamenes.features.time.data.datasource.TimeRemoteDataSource
-
 import com.example.ucbexamenes.features.time.domain.repository.TimeRepository
 import com.example.ucbexamenes.utils.NetworkUtils
 import org.threeten.bp.LocalTime
@@ -15,12 +14,17 @@ class TimeRepositoryImpl(
 
     override suspend fun getRealTime(): String {
 
-        // 1️⃣ Si no hay internet → usar hora local del sistema
+        //  Si no hay internet → usar hora local del sistema
         if (!NetworkUtils.isOnline(context)) {
             return LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
         }
 
-        // 2️⃣ Si hay internet → usar hora del servidor
-        return remote.fetchTimeFromServer()
+        // Si hay internet → intentar usar hora del servidor
+        return try {
+            remote.fetchTimeFromServer()
+        } catch (e: Exception) {
+            // Si falla (timeout, error de red, etc.) → usar hora local como fallback
+            LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+        }
     }
 }
