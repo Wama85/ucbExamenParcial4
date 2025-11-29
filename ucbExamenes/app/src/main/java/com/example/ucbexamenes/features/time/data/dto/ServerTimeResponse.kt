@@ -1,4 +1,5 @@
 package com.example.ucbexamenes.features.time.data.dto
 
-class ServerTimeResponse {
-}
+data class ServerTimeResponse(
+    val datetime: String
+)
